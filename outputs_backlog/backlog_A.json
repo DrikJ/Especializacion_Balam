@@ -1,0 +1,77 @@
+{
+  "requerimientos_funcionales": [
+    {
+      "rol": "Recepcionista de veterinaria",
+      "accion": "gestionar citas de mascotas (crear, ver, editar, cancelar)",
+      "beneficio": "organizar el flujo de atención y evitar empalmes en la agenda",
+      "criterios_aceptacion": [
+        {
+          "dado_que": "estoy autenticado en el sistema como recepcionista",
+          "cuando": "intento agendar una cita en un horario ya ocupado por otro doctor",
+          "entonces": "el sistema muestra un error indicando 'Horario no disponible' y me impide guardar la cita"
+        },
+        {
+          "dado_que": "estoy en el formulario de nueva cita",
+          "cuando": "completo todos los datos requeridos (dueño, mascota, motivo, fecha) y presiono guardar",
+          "entonces": "la cita aparece inmediatamente en el calendario del día"
+        }
+      ]
+    },
+    {
+      "rol": "Médico Veterinario",
+      "accion": "registrar y consultar el historial médico de las mascotas",
+      "beneficio": "dar seguimiento a tratamientos, vacunas y diagnósticos previos",
+      "criterios_aceptacion": [
+        {
+          "dado_que": "estoy viendo el perfil de una mascota",
+          "cuando": "agrego una nueva nota de consulta y guardo",
+          "entonces": "la nota se agrega al historial en orden cronológico con la fecha actual y mi firma digital"
+        },
+        {
+          "dado_que": "busco una mascota en el sistema",
+          "cuando": "escribo el nombre del dueño o el ID de la mascota",
+          "entonces": "el sistema muestra el expediente completo incluyendo alergias y vacunas aplicadas"
+        }
+      ]
+    },
+    {
+      "rol": "Administrador",
+      "accion": "generar cobros por servicios y productos veterinarios",
+      "beneficio": "llevar el control financiero y emitir comprobantes a los clientes",
+      "criterios_aceptacion": [
+        {
+          "dado_que": "estoy en el módulo de cobros",
+          "cuando": "agrego servicios de consulta y vacunas y selecciono 'Procesar Pago'",
+          "entonces": "el sistema calcula el total incluyendo impuestos y genera un ticket digital"
+        },
+        {
+          "dado_que": "se ha completado un pago exitosamente",
+          "cuando": "reviso el reporte de caja del día",
+          "entonces": "el pago se refleja en el total de ingresos de la fecha actual"
+        }
+      ]
+    }
+  ],
+  "requerimientos_no_funcionales": [
+    {
+      "categoria": "seguridad",
+      "especificacion": "Todas las contraseñas de usuarios deben ser almacenadas utilizando hash (e.g., bcrypt) y la comunicación debe ser mediante HTTPS."
+    },
+    {
+      "categoria": "rendimiento",
+      "especificacion": "El módulo del calendario de citas debe cargar y renderizar en pantalla en menos de 2 segundos, incluso con 500 citas agendadas en el mes."
+    },
+    {
+      "categoria": "escalabilidad",
+      "especificacion": "La arquitectura del backend debe soportar un incremento del 200% de usuarios concurrentes sin degradar el tiempo de respuesta, preparándose para futuras sucursales."
+    },
+    {
+      "categoria": "base de datos",
+      "especificacion": "Se realizarán respaldos automatizados de la base de datos (historias clínicas y pagos) cada 24 horas en un servidor en la nube seguro."
+    },
+    {
+      "categoria": "mantenibilidad",
+      "especificacion": "El código del backend debe seguir el estándar RESTful, estar documentado con Swagger/OpenAPI y tener una cobertura de pruebas unitarias superior al 70%."
+    }
+  ]
+}

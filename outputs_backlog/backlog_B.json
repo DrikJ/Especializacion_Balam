@@ -1,0 +1,77 @@
+{
+  "requerimientos_funcionales": [
+    {
+      "rol": "Operador de Aduana",
+      "accion": "registrar el ingreso de contenedores escaneando su código de identificación",
+      "beneficio": "mantener un control exacto y en tiempo real del inventario en la bodega",
+      "criterios_aceptacion": [
+        {
+          "dado_que": "estoy en el andén de recepción con la sesión iniciada",
+          "cuando": "ingreso el número de contenedor válido y selecciono 'Ingresar'",
+          "entonces": "el sistema actualiza el estado del contenedor a 'En Bodega' y registra la fecha/hora de entrada"
+        },
+        {
+          "dado_que": "intento registrar un contenedor",
+          "cuando": "ingreso un código que ya está registrado como 'En Bodega'",
+          "entonces": "el sistema rechaza la operación y muestra la alerta 'Contenedor duplicado'"
+        }
+      ]
+    },
+    {
+      "rol": "Sistema Automático (Cron Job)",
+      "accion": "rastrear y calcular el tiempo que los contenedores llevan en la bodega",
+      "beneficio": "identificar contenedores que han superado el tiempo máximo de estadía permitida",
+      "criterios_aceptacion": [
+        {
+          "dado_que": "es la hora de corte diario (ej. 23:59)",
+          "cuando": "el sistema revisa la lista de contenedores en bodega",
+          "entonces": "marca con bandera 'Retraso' a aquellos que tengan más de 7 días naturales almacenados"
+        },
+        {
+          "dado_que": "un contenedor supera el límite de estadía",
+          "cuando": "cambia su estado a 'Retraso'",
+          "entonces": "el sistema desencadena el proceso de notificación por correo"
+        }
+      ]
+    },
+    {
+      "rol": "Gerente de Logística",
+      "accion": "recibir notificaciones por correo sobre contenedores con retraso",
+      "beneficio": "tomar acciones correctivas y liberar espacio en la aduana",
+      "criterios_aceptacion": [
+        {
+          "dado_que": "uno o más contenedores entran en estado de 'Retraso'",
+          "cuando": "el sistema procesa las notificaciones diarias",
+          "entonces": "recibo un correo electrónico consolidado con la lista de IDs, fechas de ingreso y días de retraso"
+        },
+        {
+          "dado_que": "el servidor de correo presenta una caída temporal",
+          "cuando": "el sistema intenta enviar la alerta",
+          "entonces": "el envío se encola y reintenta cada hora hasta que se confirma la entrega exitosa"
+        }
+      ]
+    }
+  ],
+  "requerimientos_no_funcionales": [
+    {
+      "categoria": "seguridad",
+      "especificacion": "El sistema debe integrarse con el Active Directory del puerto para la autenticación y contar con control de acceso basado en roles (RBAC)."
+    },
+    {
+      "categoria": "rendimiento",
+      "especificacion": "La búsqueda y actualización de estado de contenedores debe realizarse en menos de 1 segundo para no interrumpir el flujo logístico de los andenes."
+    },
+    {
+      "categoria": "escalabilidad",
+      "especificacion": "El módulo debe ser capaz de procesar el registro simultáneo de hasta 500 contenedores por hora provenientes de diferentes dispositivos móviles."
+    },
+    {
+      "categoria": "base de datos",
+      "especificacion": "Se requiere que las tablas de rastreo soporten concurrencia alta y utilicen índices optimizados para filtrar por fecha y estado en bases de datos relacionales robustas."
+    },
+    {
+      "categoria": "mantenibilidad",
+      "especificacion": "La lógica de notificación de correos debe ser un microservicio independiente (desacoplado del registro de contenedores) para facilitar su mantenimiento y actualizaciones."
+    }
+  ]
+}
